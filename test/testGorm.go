@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	"imessage/models"
@@ -37,4 +38,23 @@ func main() {
 			panic(err)
 		}
 	}(DB)
+	var user1 models.UserBasic
+
+	user1.Name = "Lucy"
+	user1.PassWord = "123456"
+	user1.Phone = "110120119"
+	user1.Email = "123@qq.com"
+	user1.Identity = "user1"
+	user1.ClientIP = "127.1.1.1"
+	user1.ClientPort = "9000"
+	user1.LoginTime = 1
+	user1.HeartBeatTime = 1
+	user1.LoginOutTime = 1
+	user1.IsLogOut = false
+	user1.DeviceInfo = "iOS"
+
+	result := DB.Create(&user1)
+	if result.Error != nil {
+		fmt.Println(result.Error)
+	}
 }
