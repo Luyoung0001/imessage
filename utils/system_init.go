@@ -35,7 +35,6 @@ func InitMySQL() {
 			LogLevel:      logger.Info,
 			Colorful:      true,
 		})
-
 	// 连接数据库
 	DB, _ = gorm.Open(mysql.Open(viper.GetString("mysql.dns")), &gorm.Config{Logger: newLogger})
 	fmt.Println("config mysql:", viper.Get("mysql"))
