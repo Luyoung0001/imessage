@@ -5,6 +5,8 @@ import (
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
 	"imessage/models"
+	"imessage/utils"
+	"math/rand"
 	"strconv"
 	"time"
 )
@@ -41,6 +43,8 @@ func CreateUser(c *gin.Context) {
 	user.Email = c.Query("email")
 	passWord := c.Query("passWord")
 	rePassWord := c.Query("rePassWord")
+	// 获得一个随机数
+	salt := fmt.Sprintf("%06d", rand.Int31())
 
 	// 判断是否注册过
 	data1 := models.FindUserByName(user.Name)
@@ -67,8 +71,10 @@ func CreateUser(c *gin.Context) {
 		})
 
 	} else {
+		user.Salt = salt
 		// 这里暂时存入一个不准确的时间
-		user.PassWord = passWord
+
+		user.PassWord = utils.MakePassword(passWord, salt)
 		user.HeartBeatTime = time.Now()
 		user.LoginTime = time.Now()
 		user.LoginOutTime = time.Now()
@@ -110,7 +116,7 @@ func DeleteUser(c *gin.Context) {
 // @Router /user/updateUser [post]
 func UpdateUser(c *gin.Context) {
 	user := models.UserBasic{}
-	// 获取前端数据id,然后由于 id 是主要键值,再进行查找\删除操作
+	// 获取前端数据id,然后由于 id 是主要键值,再进行查找,删除操作
 	id, _ := strconv.Atoi(c.PostForm("id"))
 	user.ID = uint(id)
 	// 修改
@@ -130,6 +136,47 @@ func UpdateUser(c *gin.Context) {
 		models.UpdateUser(user)
 		c.JSON(200, gin.H{
 			"message": "修改用户成功!",
+		})
+	}
+
+}
+
+// UserLogin
+// @Summary 用户登录
+// @Tags 用户模块
+// @param name formData string false "name"
+// @param password formData string false "password"
+// @Success 200 {string} json{"code","message"}
+// @Router /user/userLogin [post]
+func UserLogin(c *gin.Context) {
+	// 拿到前端传来的用户名和密码
+	Name := c.PostForm("name")
+	PassWord := c.PostForm("password")
+	// 根据用户名查询用户,如果查到进行密码判断
+	user := models.FindUserByName(Name)
+
+	if user.Name != "" {
+		// 如果查询到用户名,则进行密码验证
+		// 加密
+		PWD := utils.MakePassword(PassWord, user.Salt)
+		// 用密码和用户名来查询用户
+		data := models.FindUserByNameAndPwd(Name, PWD)
+		fmt.Println(PWD)
+		if data.Name != "" {
+			c.JSON(200, gin.H{
+				"message": "密码正确,登陆成功!",
+			})
+
+		} else {
+			c.JSON(200, gin.H{
+				"message": "密码错误,登陆失败!",
+			})
+
+		}
+
+	} else {
+		c.JSON(200, gin.H{
+			"message": "该用户不存在!",
 		})
 	}
 

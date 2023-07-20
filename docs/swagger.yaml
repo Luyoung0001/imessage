@@ -97,4 +97,23 @@ paths:
       summary: 修改用户
       tags:
       - 用户模块
+  /user/userLogin:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: password
+        in: formData
+        name: password
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 用户登录
+      tags:
+      - 用户模块
 swagger: "2.0"

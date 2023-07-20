@@ -15,6 +15,7 @@ type UserBasic struct {
 	Identity      string
 	ClientIP      string
 	ClientPort    string
+	Salt          string
 	LoginTime     time.Time
 	HeartBeatTime time.Time
 	LoginOutTime  time.Time
@@ -33,6 +34,15 @@ func GetUserList() []*UserBasic {
 	//	fmt.Println(v)
 	//}
 	return data
+}
+
+// 通过密码和用户名来查询用户
+
+func FindUserByNameAndPwd(name, password string) UserBasic {
+	// password 是加密后的字符串
+	user := UserBasic{}
+	utils.DB.Where("name = ? and pass_word = ?", name, password).First(&user)
+	return user
 }
 
 // 通过用户姓名定位到一个人
