@@ -9,6 +9,7 @@ func main() {
 	// 初始化
 	utils.InitConfig()
 	utils.InitMySQL()
+	utils.InitRedis()
 	// 路由
 	r := router.Router()
 	err := r.Run(":9000")

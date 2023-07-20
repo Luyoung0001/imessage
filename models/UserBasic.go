@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"gorm.io/gorm"
 	"imessage/utils"
 	"time"
@@ -42,6 +43,14 @@ func FindUserByNameAndPwd(name, password string) UserBasic {
 	// password 是加密后的字符串
 	user := UserBasic{}
 	utils.DB.Where("name = ? and pass_word = ?", name, password).First(&user)
+
+	// token 加密
+
+	str := fmt.Sprintf("%d", time.Now().Unix())
+	temp := utils.MD5Encode(str)
+
+	utils.DB.Where("name = ?", user.Name).Update("identity", temp)
+	utils.DB.Model(&user).Update("identity", temp)
 	return user
 }
 
@@ -78,5 +87,24 @@ func DeleteUser(user UserBasic) *gorm.DB {
 }
 
 func UpdateUser(user UserBasic) *gorm.DB {
-	return utils.DB.Model(&user).Updates(UserBasic{Name: user.Name, PassWord: user.PassWord, Phone: user.Phone, Email: user.Email})
+	return utils.DB.Model(&user).Updates(UserBasic{Name: user.Name, PassWord: user.PassWord, Phone: user.Phone, Email: user.Email, Salt: user.Salt})
+}
+func IsUniqueUpdateUser(user UserBasic) bool {
+	data1 := FindUserByName(user.Name)
+	data2 := FindUserByPhone(user.Phone)
+	data3 := FindUserByEmail(user.Email)
+	// 同时还得检查被搜到的 id 是否和自己一样,如果一样,那就说明可以修改;否则就不能修改
+	if data1.Name != "" && data1.ID != user.ID || data2.Phone != "" && data2.ID != user.ID || data3.Email != "" && data3.ID != user.ID {
+		return false
+	}
+	return true
+}
+func IsUniqueCreateUser(user UserBasic) bool {
+	data1 := FindUserByName(user.Name)
+	data2 := FindUserByPhone(user.Phone)
+	data3 := FindUserByEmail(user.Email)
+	if data1.Name != "" || data2.Phone != "" || data3.Email != "" {
+		return false
+	}
+	return true
 }
