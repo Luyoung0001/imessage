@@ -66,6 +66,16 @@ paths:
       summary: 所有用户
       tags:
       - 用户模块
+  /user/sendMsg:
+    get:
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 发送消息
+      tags:
+      - 用户模块
   /user/updateUser:
     post:
       parameters:

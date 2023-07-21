@@ -107,6 +107,22 @@
                 }
             }
         },
+        "/user/sendMsg": {
+            "get": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "发送消息",
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/updateUser": {
             "post": {
                 "tags": [

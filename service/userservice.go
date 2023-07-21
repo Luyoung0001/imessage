@@ -4,9 +4,11 @@ import (
 	"fmt"
 	"github.com/asaskevich/govalidator"
 	"github.com/gin-gonic/gin"
+	"github.com/gorilla/websocket"
 	"imessage/models"
 	"imessage/utils"
 	"math/rand"
+	"net/http"
 	"strconv"
 	"time"
 )
@@ -195,6 +197,52 @@ func UserLogin(c *gin.Context) {
 			"code":    -1, // 0 : 成功; -1 : 失败
 			"message": "登陆失败,请检查用户名或者登录密码!",
 		})
+	}
+
+}
+
+// 防止跨站域的伪造请求
+
+var upGrade = websocket.Upgrader{
+	CheckOrigin: func(r *http.Request) bool {
+		return true
+	},
+}
+
+// SendMsg
+// @Summary 发送消息
+// @Tags 用户模块
+// @Success 200 {string} json{"code","message"}
+// @Router /user/sendMsg [get]
+func SendMsg(c *gin.Context) {
+	ws, err := upGrade.Upgrade(c.Writer, c.Request, nil)
+	if err != nil {
+		fmt.Println(err)
+	}
+	// 最后断开连接(这里会自动实现四次挥手)
+	defer func(ws *websocket.Conn) {
+		err = ws.Close()
+		if err != nil {
+			fmt.Println(err)
+		}
+	}(ws)
+	MsgHandler(ws, c)
+
+}
+func MsgHandler(ws *websocket.Conn, c *gin.Context) {
+	msg, err := utils.Subscribe(c, utils.PublishKey)
+
+	if err != nil {
+		fmt.Println(err)
+	}
+	// fmt.Println("hello, 发送消息呢:", msg)
+	// 选取时间格式
+	tm := time.Now().Format("2006-01-02 15:15:03")
+	m := fmt.Sprintf("[ws][%s]:%s", tm, msg)
+
+	err = ws.WriteMessage(1, []byte(m))
+	if err != nil {
+		fmt.Println(err)
 	}
 
 }
