@@ -1,6 +1,34 @@
 info:
   contact: {}
 paths:
+  /addFriend:
+    post:
+      parameters:
+      - description: userId
+        in: formData
+        name: userId
+        type: string
+      - description: targetName
+        in: formData
+        name: targetName
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 添加好友
+      tags:
+      - 用户模块
+  /chat:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      tags:
+      - 用户模块
   /index:
     get:
       responses:
@@ -10,28 +38,70 @@ paths:
             type: string
       tags:
       - 首页
-  /user/createUser:
+  /searchFriends:
+    post:
+      parameters:
+      - description: id
+        in: formData
+        name: userId
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 搜索好友
+      tags:
+      - 用户模块
+  /toChat:
     get:
       parameters:
-      - description: 用户名
+      - description: userid
         in: query
+        name: UserId
+        type: string
+      - description: token
+        in: query
+        name: token
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      tags:
+      - 用户模块
+  /toRegister:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      tags:
+      - 首页
+  /user/createUser:
+    post:
+      parameters:
+      - description: name
+        in: formData
         name: name
         type: string
-      - description: 手机号
-        in: query
+      - description: password
+        in: formData
+        name: password
+        type: string
+      - description: Identity
+        in: formData
+        name: Identity
+        type: string
+      - description: phone
+        in: formData
         name: phone
         type: string
-      - description: 邮箱
-        in: query
+      - description: email
+        in: formData
         name: email
-        type: string
-      - description: 密码
-        in: query
-        name: passWord
-        type: string
-      - description: 确认密码
-        in: query
-        name: rePassWord
         type: string
       responses:
         "200":
@@ -42,10 +112,10 @@ paths:
       tags:
       - 用户模块
   /user/deleteUser:
-    get:
+    post:
       parameters:
       - description: id
-        in: query
+        in: formData
         name: id
         type: string
       responses:
@@ -56,8 +126,27 @@ paths:
       summary: 删除用户
       tags:
       - 用户模块
+  /user/findUserByNameAndPwd:
+    post:
+      parameters:
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: password
+        in: formData
+        name: password
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 用户登录
+      tags:
+      - 用户模块
   /user/getUserList:
-    get:
+    post:
       responses:
         "200":
           description: code","message"}
@@ -67,6 +156,16 @@ paths:
       tags:
       - 用户模块
   /user/sendMsg:
+    get:
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 发送消息
+      tags:
+      - 消息模块
+  /user/sendUserMsg:
     get:
       responses:
         "200":
@@ -105,25 +204,6 @@ paths:
           schema:
             type: string
       summary: 修改用户
-      tags:
-      - 用户模块
-  /user/userLogin:
-    post:
-      parameters:
-      - description: name
-        in: formData
-        name: name
-        type: string
-      - description: password
-        in: formData
-        name: password
-        type: string
-      responses:
-        "200":
-          description: code","message"}
-          schema:
-            type: string
-      summary: 用户登录
       tags:
       - 用户模块
 swagger: "2.0"

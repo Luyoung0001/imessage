@@ -17,7 +17,7 @@ import (
 // @Summary 所有用户
 // @Tags 用户模块
 // @Success 200 {string} json{"code","message"}
-// @Router /user/getUserList [get]
+// @Router /user/getUserList [post]
 func GetUserList(c *gin.Context) {
 	// 从数据库获得数据,将所有的数据存储成数据,然后返回
 	data := make([]*models.UserBasic, 10)
@@ -31,20 +31,20 @@ func GetUserList(c *gin.Context) {
 // CreateUser
 // @Summary 新增用户
 // @Tags 用户模块
-// @param name query string false "用户名"
-// @param phone query string false "手机号"
-// @param email query string false "邮箱"
-// @param passWord query string false "密码"
-// @param rePassWord query string false "确认密码"
+// @param name formData string false "name"
+// @param password formData string false "password"
+// @param Identity formData string false "Identity"
+// @param phone formData string false "phone"
+// @param email formData string false "email"
 // @Success 200 {string} json{"code","message"}
-// @Router /user/createUser [get]
+// @Router /user/createUser [post]
 func CreateUser(c *gin.Context) {
 	user := models.UserBasic{}
-	// 获取前端数据,在这儿进行组创,然后进行存储
+
 	// 先判断是否有冲突
-	user.Name = c.Query("name")
-	user.Phone = c.Query("phone")
-	user.Email = c.Query("email")
+	user.Name = c.Request.FormValue("name")
+	user.Phone = c.Request.FormValue("phone")
+	user.Email = c.Request.FormValue("email")
 
 	if !models.IsUniqueCreateUser(user) {
 		c.JSON(200, gin.H{
@@ -53,9 +53,17 @@ func CreateUser(c *gin.Context) {
 		})
 		return
 	}
-	// 如果没有冲突,继续
-	passWord := c.Query("passWord")
-	rePassWord := c.Query("rePassWord")
+	// 判断是否输入完了账号,密码
+	passWord := c.Request.FormValue("password")
+	rePassWord := c.Request.FormValue("Identity")
+	if user.Name == "" || passWord == "" || rePassWord == "" {
+		c.JSON(200, gin.H{
+			"code":    -1,
+			"message": "密码或者账号不能为空!",
+		})
+		return
+	}
+	// 如果一切正常,继续
 	// 获得一个随机数
 	salt := fmt.Sprintf("%06d", rand.Int31())
 	if passWord != rePassWord {
@@ -86,9 +94,9 @@ func CreateUser(c *gin.Context) {
 // DeleteUser
 // @Summary 删除用户
 // @Tags 用户模块
-// @param id query string false "id"
+// @param id formData string false "id"
 // @Success 200 {string} json{"code","message"}
-// @Router /user/deleteUser [get]
+// @Router /user/deleteUser [post]
 func DeleteUser(c *gin.Context) {
 	user := models.UserBasic{}
 	// 获取前端数据id,然后由于 id 是主要键值,再进行查找\删除操作
@@ -157,48 +165,46 @@ func UpdateUser(c *gin.Context) {
 
 }
 
-// UserLogin
+// FindUserByNameAndPwd
 // @Summary 用户登录
 // @Tags 用户模块
 // @param name formData string false "name"
 // @param password formData string false "password"
 // @Success 200 {string} json{"code","message"}
-// @Router /user/userLogin [post]
-func UserLogin(c *gin.Context) {
+// @Router /user/findUserByNameAndPwd [post]
+func FindUserByNameAndPwd(c *gin.Context) {
+	data := models.UserBasic{}
 	// 拿到前端传来的用户名和密码
-	Name := c.PostForm("name")
-	PassWord := c.PostForm("password")
-	// 根据用户名查询用户,如果查到进行密码判断
-	user := models.FindUserByName(Name)
 
-	if user.Name != "" {
-		// 如果查询到用户名,则进行密码验证
-		// 加密
-		PWD := utils.MakePassword(PassWord, user.Salt)
-		// 用密码和用户名来查询用户
-		data := models.FindUserByNameAndPwd(Name, PWD)
-		if data.Name != "" {
-			c.JSON(200, gin.H{
-				"code":    0, // 0 : 成功; -1 : 失败
-				"message": "登陆成功!",
-				"data":    data,
-			})
-
-		} else {
-			c.JSON(200, gin.H{
-				"code":    -1, // 0 : 成功; -1 : 失败
-				"message": "登陆失败,请检查用户名或者登录密码!",
-			})
-
-		}
-
-	} else {
+	name := c.Request.FormValue("name")
+	password := c.Request.FormValue("password")
+	fmt.Println(name, password)
+	user := models.FindUserByName(name)
+	if user.Name == "" {
 		c.JSON(200, gin.H{
-			"code":    -1, // 0 : 成功; -1 : 失败
-			"message": "登陆失败,请检查用户名或者登录密码!",
+			"code":    -1, //  0成功   -1失败
+			"message": "该用户不存在",
+			"data":    data,
 		})
+		return
 	}
 
+	flag := utils.ValidPassword(password, user.Salt, user.PassWord)
+	if !flag {
+		c.JSON(200, gin.H{
+			"code":    -1, //  0成功   -1失败
+			"message": "密码不正确",
+			"data":    data,
+		})
+		return
+	}
+	pwd := utils.MakePassword(password, user.Salt)
+	data = models.FindUserByNameAndPwd(name, pwd)
+	c.JSON(200, gin.H{
+		"code":    0, //  0成功   -1失败
+		"message": "登录成功",
+		"data":    data,
+	})
 }
 
 // 防止跨站域的伪造请求
@@ -211,15 +217,16 @@ var upGrade = websocket.Upgrader{
 
 // SendMsg
 // @Summary 发送消息
-// @Tags 用户模块
+// @Tags 消息模块
 // @Success 200 {string} json{"code","message"}
 // @Router /user/sendMsg [get]
 func SendMsg(c *gin.Context) {
+	// 普通的 HTTP 连接升级为 WebSocket 连接
 	ws, err := upGrade.Upgrade(c.Writer, c.Request, nil)
 	if err != nil {
 		fmt.Println(err)
 	}
-	// 最后断开连接(这里会自动实现四次挥手)
+
 	defer func(ws *websocket.Conn) {
 		err = ws.Close()
 		if err != nil {
@@ -227,8 +234,8 @@ func SendMsg(c *gin.Context) {
 		}
 	}(ws)
 	MsgHandler(ws, c)
-
 }
+
 func MsgHandler(ws *websocket.Conn, c *gin.Context) {
 	msg, err := utils.Subscribe(c, utils.PublishKey)
 
@@ -246,3 +253,98 @@ func MsgHandler(ws *websocket.Conn, c *gin.Context) {
 	}
 
 }
+
+// SendUserMsg
+// @Summary 发送消息
+// @Tags 用户模块
+// @Success 200 {string} json{"code","message"}
+// @Router /user/sendUserMsg [get]
+func SendUserMsg(c *gin.Context) {
+	models.Chat(c.Writer, c.Request)
+
+}
+
+// SearchFriends
+// @Summary 搜索好友
+// @Tags 用户模块
+// @param userId formData string false "id"
+// @Success 200 {string} json{"code","message"}
+// @Router /searchFriends [post]
+func SearchFriends(c *gin.Context) {
+	id, _ := strconv.Atoi(c.Request.FormValue("userId"))
+	users := models.SearchFriend(uint(id))
+
+	utils.RespOKList(c.Writer, users, len(users))
+}
+
+// AddFriend
+// @Summary 添加好友
+// @Tags 用户模块
+// @param userId formData string false "userId"
+// @param targetName formData string false "targetName"
+// @Success 200 {string} json{"code","message"}
+// @Router /contact/addFriend [post]
+func AddFriend(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
+	targetName := c.Request.FormValue("targetName")
+	code, msg := models.AddFriend(uint(userId), targetName)
+	if code == 0 {
+		utils.RespOK(c.Writer, code, msg)
+	} else {
+		utils.RespFail(c.Writer, msg)
+	}
+}
+
+//
+//// 新建群
+//func CreateCommunity(c *gin.Context) {
+//	ownerId, _ := strconv.Atoi(c.Request.FormValue("ownerId"))
+//	name := c.Request.FormValue("name")
+//	icon := c.Request.FormValue("icon")
+//	desc := c.Request.FormValue("desc")
+//	community := models.Community{}
+//	community.OwnerId = uint(ownerId)
+//	community.Name = name
+//	community.Img = icon
+//	community.Desc = desc
+//	code, msg := models.CreateCommunity(community)
+//	if code == 0 {
+//		utils.RespOK(c.Writer, code, msg)
+//	} else {
+//		utils.RespFail(c.Writer, msg)
+//	}
+//}
+//
+//// 加载群列表
+//func LoadCommunity(c *gin.Context) {
+//	ownerId, _ := strconv.Atoi(c.Request.FormValue("ownerId"))
+//	//	name := c.Request.FormValue("name")
+//	data, msg := models.LoadCommunity(uint(ownerId))
+//	if len(data) != 0 {
+//		utils.RespList(c.Writer, 0, data, msg)
+//	} else {
+//		utils.RespFail(c.Writer, msg)
+//	}
+//}
+//
+//// 加入群 userId uint, comId uint
+//func JoinGroups(c *gin.Context) {
+//	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
+//	comId := c.Request.FormValue("comId")
+//
+//	//	name := c.Request.FormValue("name")
+//	data, msg := models.JoinGroup(uint(userId), comId)
+//	if data == 0 {
+//		utils.RespOK(c.Writer, data, msg)
+//	} else {
+//		utils.RespFail(c.Writer, msg)
+//	}
+//}
+//
+//func FindByID(c *gin.Context) {
+//	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
+//
+//	//	name := c.Request.FormValue("name")
+//	data := models.FindByID(uint(userId))
+//	utils.RespOK(c.Writer, data, "ok")
+//}

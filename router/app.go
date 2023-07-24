@@ -10,16 +10,34 @@ import (
 
 func Router() *gin.Engine {
 	r := gin.Default()
+
 	docs.SwaggerInfo.BasePath = ""
 
+	// swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
+	// 静态资源
+	r.Static("/asset", "/Users/luliang/GoLand/imessage/asset/")
+	r.LoadHTMLGlob("/Users/luliang/GoLand/imessage/views/**/*")
+
+	// 首页
+	r.GET("/", service.GetIndex)
 	r.GET("/index", service.GetIndex)
-	r.GET("/user/getUserList", service.GetUserList) // 查
-	r.GET("/user/createUser", service.CreateUser)   // 增
-	r.GET("/user/deleteUser", service.DeleteUser)   // 删
-	r.POST("/user/updateUser", service.UpdateUser)  // 改
-	r.POST("/user/userLogin", service.UserLogin)    // 用户登录
-	r.GET("/user/sendMsg", service.SendMsg)         // 发送消息
+	r.GET("/toRegister", service.ToRegister) // 用户注册
+	r.GET("/toChat", service.ToChat)
+	r.GET("/chat", service.Chat)
+	r.POST("/searchFriends", service.SearchFriends)
+	// 用户模块
+	r.POST("/user/createUser", service.CreateUser) // 增加用户
+	r.POST("/user/getUserList", service.GetUserList)
+	r.POST("/user/deleteUser", service.DeleteUser)
+	r.POST("/user/updateUser", service.UpdateUser)
+	r.POST("/user/findUserByNameAndPwd", service.FindUserByNameAndPwd)
+	r.POST("/user/login", service.FindUserByNameAndPwd)
+	// 发送消息
+	r.GET("/user/sendMsg", service.SendMsg)
+	r.GET("/user/sendUserMsg", service.SendUserMsg)
+	//添加好友
+	r.POST("/contact/addFriend", service.AddFriend)
 
 	return r
 }

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"github.com/spf13/viper"
 	"imessage/router"
 	"imessage/utils"
 )
@@ -12,7 +13,7 @@ func main() {
 	utils.InitRedis()
 	// 路由
 	r := router.Router()
-	err := r.Run(":9000")
+	err := r.Run(viper.GetString("port.server"))
 	if err != nil {
 		return
 	}

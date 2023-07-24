@@ -16,6 +16,51 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/addFriend": {
+            "post": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "添加好友",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "userId",
+                        "name": "userId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "targetName",
+                        "name": "targetName",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/chat": {
+            "get": {
+                "tags": [
+                    "用户模块"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/index": {
             "get": {
                 "tags": [
@@ -31,8 +76,76 @@ const docTemplate = `{
                 }
             }
         },
-        "/user/createUser": {
+        "/searchFriends": {
+            "post": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "搜索好友",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "id",
+                        "name": "userId",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/toChat": {
             "get": {
+                "tags": [
+                    "用户模块"
+                ],
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "userid",
+                        "name": "UserId",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "token",
+                        "name": "token",
+                        "in": "query"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/toRegister": {
+            "get": {
+                "tags": [
+                    "首页"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/createUser": {
+            "post": {
                 "tags": [
                     "用户模块"
                 ],
@@ -40,33 +153,33 @@ const docTemplate = `{
                 "parameters": [
                     {
                         "type": "string",
-                        "description": "用户名",
+                        "description": "name",
                         "name": "name",
-                        "in": "query"
+                        "in": "formData"
                     },
                     {
                         "type": "string",
-                        "description": "手机号",
+                        "description": "password",
+                        "name": "password",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Identity",
+                        "name": "Identity",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "phone",
                         "name": "phone",
-                        "in": "query"
+                        "in": "formData"
                     },
                     {
                         "type": "string",
-                        "description": "邮箱",
+                        "description": "email",
                         "name": "email",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "密码",
-                        "name": "passWord",
-                        "in": "query"
-                    },
-                    {
-                        "type": "string",
-                        "description": "确认密码",
-                        "name": "rePassWord",
-                        "in": "query"
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -80,7 +193,7 @@ const docTemplate = `{
             }
         },
         "/user/deleteUser": {
-            "get": {
+            "post": {
                 "tags": [
                     "用户模块"
                 ],
@@ -90,7 +203,37 @@ const docTemplate = `{
                         "type": "string",
                         "description": "id",
                         "name": "id",
-                        "in": "query"
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/findUserByNameAndPwd": {
+            "post": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "用户登录",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "password",
+                        "name": "password",
+                        "in": "formData"
                     }
                 ],
                 "responses": {
@@ -104,7 +247,7 @@ const docTemplate = `{
             }
         },
         "/user/getUserList": {
-            "get": {
+            "post": {
                 "tags": [
                     "用户模块"
                 ],
@@ -120,6 +263,22 @@ const docTemplate = `{
             }
         },
         "/user/sendMsg": {
+            "get": {
+                "tags": [
+                    "消息模块"
+                ],
+                "summary": "发送消息",
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/user/sendUserMsg": {
             "get": {
                 "tags": [
                     "用户模块"
@@ -170,36 +329,6 @@ const docTemplate = `{
                         "type": "string",
                         "description": "email",
                         "name": "email",
-                        "in": "formData"
-                    }
-                ],
-                "responses": {
-                    "200": {
-                        "description": "code\",\"message\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/user/userLogin": {
-            "post": {
-                "tags": [
-                    "用户模块"
-                ],
-                "summary": "用户登录",
-                "parameters": [
-                    {
-                        "type": "string",
-                        "description": "name",
-                        "name": "name",
-                        "in": "formData"
-                    },
-                    {
-                        "type": "string",
-                        "description": "password",
-                        "name": "password",
                         "in": "formData"
                     }
                 ],
