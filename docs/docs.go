@@ -16,7 +16,22 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
-        "/addFriend": {
+        "/chat": {
+            "get": {
+                "tags": [
+                    "用户模块"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/contact/addFriend": {
             "post": {
                 "tags": [
                     "用户模块"
@@ -39,21 +54,6 @@ const docTemplate = `{
                 "responses": {
                     "200": {
                         "description": "code\",\"message\"}",
-                        "schema": {
-                            "type": "string"
-                        }
-                    }
-                }
-            }
-        },
-        "/chat": {
-            "get": {
-                "tags": [
-                    "用户模块"
-                ],
-                "responses": {
-                    "200": {
-                        "description": "OK",
                         "schema": {
                             "type": "string"
                         }

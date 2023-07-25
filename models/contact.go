@@ -32,12 +32,10 @@ func SearchFriend(userId uint) []UserBasic {
 //添加好友   自己的ID  ， 好友的ID
 
 func AddFriend(userId uint, targetName string) (int, string) {
-	//user := UserBasic{}
-
 	if targetName != "" {
 		targetUser := FindUserByName(targetName)
-		//fmt.Println(targetUser, " userId        ", )
 		if targetUser.Salt != "" {
+			// Salt 字段不为空,该用户一定注册成功了
 			if targetUser.ID == userId {
 				return -1, "不能加自己"
 			}

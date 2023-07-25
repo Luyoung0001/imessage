@@ -6,17 +6,13 @@ import (
 	"imessage/models"
 )
 
-// 这里就是将模板导入数据库的一个简单案例
-// 前提是创建好了一个数据库,数据库的名字暂定义为 "contact"
-// 这个是用来实现模型绑定到数据的功能,只运行一次
-
 var (
 	DBContact *gorm.DB
 )
 
 func initMySQLContact() (err error) {
 	// 连接数据库
-	dsn := "root:791975457@qq.com@tcp(127.0.0.1:3306)/contact?charset=utf8mb4&parseTime=True&loc=Local"
+	dsn := "root:791975457@qq.com@tcp(127.0.0.1:3306)/ginchat?charset=utf8mb4&parseTime=True&loc=Local"
 	DBContact, err = gorm.Open("mysql", dsn)
 	if err != nil {
 		return err

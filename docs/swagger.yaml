@@ -1,7 +1,16 @@
 info:
   contact: {}
 paths:
-  /addFriend:
+  /chat:
+    get:
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: string
+      tags:
+      - 用户模块
+  /contact/addFriend:
     post:
       parameters:
       - description: userId
@@ -18,15 +27,6 @@ paths:
           schema:
             type: string
       summary: 添加好友
-      tags:
-      - 用户模块
-  /chat:
-    get:
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: string
       tags:
       - 用户模块
   /index:

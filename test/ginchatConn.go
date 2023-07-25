@@ -31,7 +31,10 @@ func main() {
 		panic(err)
 	}
 	// 模型绑定
-	DBGinChat.AutoMigrate(&models.UserBasic{}) // todos
+	DBGinChat.AutoMigrate(&models.UserBasic{})
+	DBGinChat.AutoMigrate(&models.Contact{})
+	DBGinChat.AutoMigrate(&models.Message{})
+	DBGinChat.AutoMigrate(&models.GroupBasic{})
 	defer func(DB *gorm.DB) {
 		err := DB.Close()
 		if err != nil {
