@@ -76,9 +76,9 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	}
 	// 2.获取 conn
 	node := &Node{
-		Conn:      conn,
+		Conn:      conn,                    // 这是一个升级后的websocket
 		DataQueue: make(chan []byte, 50),   // 有可能有多个人给一个人发送消息,管道容量暂设定为 50
-		GroupSets: set.New(set.ThreadSafe), // 线程安全群集合
+		GroupSets: set.New(set.ThreadSafe), // 线程安全群集合,对其进行写入时,应该是线程安全的
 	}
 	// 3.获取关系
 	// 4.userId 与 node绑定,并加锁
@@ -94,13 +94,17 @@ func Chat(writer http.ResponseWriter, request *http.Request) {
 	sendMsg(userId, []byte("欢迎来到聊天室233!"))
 
 }
+
+// 定向写入User_node_conn
 func sendProc(node *Node) {
 	fmt.Println("sendProc...")
 	// 一直循环等待处理 Node_用户 所发的消息
 	for {
 		select {
+		// 这是一个死循环中的管道,是阻塞式读写的,它可以源源不断地将用户的数据取出来
 		case data := <-node.DataQueue:
-			// 将消息写进 Node_用户 的conn
+			// 将用户的消息装进 data
+			// 将用户的 data 写进 User_node 中的 Conn
 			err := node.Conn.WriteMessage(websocket.TextMessage, data)
 			if err != nil {
 				fmt.Println(err)
@@ -110,20 +114,21 @@ func sendProc(node *Node) {
 	}
 
 }
+
+// 定向读出User_node_conn
 func recvProc(node *Node) {
 	fmt.Println("recvProc...")
-	// 一直循环等待处理 Node_用户 所接受的消息
 	for {
-		// 将 Node_用户 的conn 中的消息读出来
+		// 将用户的数据源源不断地用 Conn 中读出来
 		_, data, err := node.Conn.ReadMessage()
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		// 将读到的数据传送进 udpSendChan
+		// 将读到的数据全部传送进 udpSendChan
 		broadMsg(data)
-		// 后端显示
-		fmt.Println("[ws] <<<<< ", data)
+		////后端显示
+		//fmt.Println("[ws] <<<<< ", data)
 	}
 
 }
@@ -131,6 +136,7 @@ func recvProc(node *Node) {
 // 所有用户的数据来后,都将存储到 udpSendChan
 var udpSendChan = make(chan []byte, 1024*32)
 
+// 非定向发出
 func broadMsg(data []byte) {
 	udpSendChan <- data
 
@@ -155,6 +161,7 @@ func udpSendProc() {
 	for {
 		select {
 		case data := <-udpSendChan:
+			// 非定向发送数据到 UDPconn 中
 			_, err := UDPconn.Write(data)
 			if err != nil {
 				fmt.Println(err)
@@ -184,11 +191,13 @@ func udpRecvProc() {
 	}
 	for {
 		var buf [512]byte
+		// 非定向读取数据到 data 中
 		n, err := UDPconn.Read(buf[0:])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
+		// 还得对这些数据进行分发,分发到特定用户
 		disPatch(buf[0:n])
 
 	}
@@ -199,6 +208,7 @@ func udpRecvProc() {
 func disPatch(data []byte) {
 	fmt.Println("disPatch1...")
 	// 初始化 message
+	// 初始化,需要对数据的接受者进行绑定
 	msg := Message{}
 	err := json.Unmarshal(data, &msg)
 	if err != nil {

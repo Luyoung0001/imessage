@@ -24,8 +24,7 @@ func Router() *gin.Engine {
 	r.GET("/index", service.GetIndex)
 	r.GET("/toRegister", service.ToRegister) // 用户注册
 	r.GET("/toChat", service.ToChat)
-	r.GET("/chat", service.Chat)
-	r.POST("/searchFriends", service.SearchFriends)
+	r.POST("/contact/addFriend", service.AddFriend)
 	// 用户模块
 	r.POST("/user/createUser", service.CreateUser) // 增加用户
 	r.POST("/user/getUserList", service.GetUserList)
@@ -33,11 +32,11 @@ func Router() *gin.Engine {
 	r.POST("/user/updateUser", service.UpdateUser)
 	r.POST("/user/findUserByNameAndPwd", service.FindUserByNameAndPwd)
 	r.POST("/user/login", service.FindUserByNameAndPwd)
+	r.POST("/searchFriends", service.SearchFriends)
 	// 发送消息
 	r.GET("/user/sendMsg", service.SendMsg)
 	r.GET("/user/sendUserMsg", service.SendUserMsg)
-	//添加好友
-	r.POST("/contact/addFriend", service.AddFriend)
+	r.GET("/chat", service.Chat)
 
 	return r
 }
