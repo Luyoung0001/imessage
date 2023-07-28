@@ -271,9 +271,10 @@ func SendUserMsg(c *gin.Context) {
 // @Success 200 {string} json{"code","message"}
 // @Router /searchFriends [post]
 func SearchFriends(c *gin.Context) {
+
 	id, _ := strconv.Atoi(c.Request.FormValue("userId"))
 	users := models.SearchFriend(uint(id))
-
+	// 这里给前端返回一个请求头,里面包含好友列表 users
 	utils.RespOKList(c.Writer, users, len(users))
 }
 
@@ -295,52 +296,70 @@ func AddFriend(c *gin.Context) {
 	}
 }
 
-//
-//// 新建群
-//func CreateCommunity(c *gin.Context) {
-//	ownerId, _ := strconv.Atoi(c.Request.FormValue("ownerId"))
-//	name := c.Request.FormValue("name")
-//	icon := c.Request.FormValue("icon")
-//	desc := c.Request.FormValue("desc")
-//	community := models.Community{}
-//	community.OwnerId = uint(ownerId)
-//	community.Name = name
-//	community.Img = icon
-//	community.Desc = desc
-//	code, msg := models.CreateCommunity(community)
-//	if code == 0 {
-//		utils.RespOK(c.Writer, code, msg)
-//	} else {
-//		utils.RespFail(c.Writer, msg)
-//	}
-//}
-//
-//// 加载群列表
-//func LoadCommunity(c *gin.Context) {
-//	ownerId, _ := strconv.Atoi(c.Request.FormValue("ownerId"))
-//	//	name := c.Request.FormValue("name")
-//	data, msg := models.LoadCommunity(uint(ownerId))
-//	if len(data) != 0 {
-//		utils.RespList(c.Writer, 0, data, msg)
-//	} else {
-//		utils.RespFail(c.Writer, msg)
-//	}
-//}
-//
-//// 加入群 userId uint, comId uint
-//func JoinGroups(c *gin.Context) {
-//	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
-//	comId := c.Request.FormValue("comId")
-//
-//	//	name := c.Request.FormValue("name")
-//	data, msg := models.JoinGroup(uint(userId), comId)
-//	if data == 0 {
-//		utils.RespOK(c.Writer, data, msg)
-//	} else {
-//		utils.RespFail(c.Writer, msg)
-//	}
-//}
-//
+// CreateCommunity
+// @Summary 创建群聊
+// @Tags 用户模块
+// @param ownerId formData string false "ownerId"
+// @param name formData string false "name"
+// @param icon formData string false "icon"
+// @param desc formData string false "desc"
+// @Success 200 {string} json{"code","message"}
+// @Router /contact/createCommunity [post]
+func CreateCommunity(c *gin.Context) {
+	ownerId, _ := strconv.Atoi(c.Request.FormValue("ownerId"))
+	name := c.Request.FormValue("name")
+	icon := c.Request.FormValue("icon")
+	desc := c.Request.FormValue("desc")
+	community := models.Community{}
+	community.OwnerId = uint(ownerId)
+	community.Name = name
+	community.Img = icon
+	community.Desc = desc
+	code, msg := models.CreateCommunity(community)
+	// 创建好了群,之后要重新刷新群的列表
+	if code == 0 {
+		utils.RespOK(c.Writer, code, msg)
+	} else {
+		utils.RespFail(c.Writer, msg)
+	}
+}
+
+// LoadCommunity
+// @Summary 加载好友列表
+// @Tags 用户模块
+// @param ownerId formData string false "ownerId"
+// @Success 200 {string} json{"code","message"}
+// @Router /contact/loadcommunity [post]
+func LoadCommunity(c *gin.Context) {
+	ownerId, _ := strconv.Atoi(c.Request.FormValue("ownerId"))
+	// 把 data 查找出来发给客户端
+	data, msg := models.LoadCommunity(uint(ownerId))
+	if len(data) != 0 {
+		utils.RespList(c.Writer, 0, data, msg)
+	} else {
+		utils.RespFail(c.Writer, msg)
+	}
+}
+
+// JoinGroups
+// @Summary 加入群聊
+// @Tags 用户模块
+// @param userId formData string false "userId"
+// @param comId formData string false "comId"
+// @Success 200 {string} json{"code","message"}
+// @Router /contact/joinGroup [post]
+func JoinGroups(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
+	comId := c.Request.FormValue("comId")
+
+	data, msg := models.JoinGroup(uint(userId), comId)
+	if data == 0 {
+		utils.RespOK(c.Writer, data, msg)
+	} else {
+		utils.RespFail(c.Writer, msg)
+	}
+}
+
 //func FindByID(c *gin.Context) {
 //	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
 //

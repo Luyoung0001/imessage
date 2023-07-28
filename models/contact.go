@@ -9,13 +9,15 @@ type Contact struct {
 	gorm.Model
 	OwnerId  uint
 	TargetId uint
-	Type     int
+	Type     int // 1 代表好友关系;2 代表群聊关系
 	Desc     string
 }
 
 func (table *Contact) TableName() string {
 	return "contact"
 }
+
+// 返回 owner_id 的所有好友,也就是返回该用户的所有好友
 
 func SearchFriend(userId uint) []UserBasic {
 	contacts := make([]Contact, 0)

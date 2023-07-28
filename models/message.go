@@ -6,6 +6,7 @@ import (
 	"github.com/gorilla/websocket"
 	"gopkg.in/fatih/set.v0"
 	"gorm.io/gorm"
+	"imessage/utils"
 	"net"
 	"net/http"
 	"strconv"
@@ -239,4 +240,24 @@ func sendMsg(userId int64, msg []byte) {
 		node.DataQueue <- msg
 	}
 
+}
+func JoinGroup(userId uint, comId string) (int, string) {
+	contact := Contact{}
+	contact.OwnerId = userId
+	contact.Type = 2
+	community := Community{}
+
+	utils.DB.Where("id=? or name=?", comId, comId).Find(&community)
+	if community.Name == "" {
+		return -1, "没有找到群"
+	}
+	utils.DB.Where("owner_id = ? and target_id = ? and type = 2 ", userId, comId).Find(&contact)
+	if !contact.CreatedAt.IsZero() {
+		// 已加过群,就不能继续加群
+		return -1, "已加过此群"
+	} else {
+		contact.TargetId = community.ID
+		utils.DB.Create(&contact)
+		return 0, "加群成功"
+	}
 }

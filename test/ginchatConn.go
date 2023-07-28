@@ -35,6 +35,7 @@ func main() {
 	DBGinChat.AutoMigrate(&models.Contact{})
 	DBGinChat.AutoMigrate(&models.Message{})
 	DBGinChat.AutoMigrate(&models.GroupBasic{})
+	DBGinChat.AutoMigrate(&models.Community{})
 	defer func(DB *gorm.DB) {
 		err := DB.Close()
 		if err != nil {

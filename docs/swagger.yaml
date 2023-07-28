@@ -29,6 +29,67 @@ paths:
       summary: 添加好友
       tags:
       - 用户模块
+  /contact/createCommunity:
+    post:
+      parameters:
+      - description: ownerId
+        in: formData
+        name: ownerId
+        type: string
+      - description: name
+        in: formData
+        name: name
+        type: string
+      - description: icon
+        in: formData
+        name: icon
+        type: string
+      - description: desc
+        in: formData
+        name: desc
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 创建群聊
+      tags:
+      - 用户模块
+  /contact/joinGroup:
+    post:
+      parameters:
+      - description: userId
+        in: formData
+        name: userId
+        type: string
+      - description: comId
+        in: formData
+        name: comId
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 加入群聊
+      tags:
+      - 用户模块
+  /contact/loadcommunity:
+    post:
+      parameters:
+      - description: ownerId
+        in: formData
+        name: ownerId
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: 加载好友列表
+      tags:
+      - 用户模块
   /index:
     get:
       responses:

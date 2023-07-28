@@ -61,6 +61,102 @@ const docTemplate = `{
                 }
             }
         },
+        "/contact/createCommunity": {
+            "post": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "创建群聊",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ownerId",
+                        "name": "ownerId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "name",
+                        "name": "name",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "icon",
+                        "name": "icon",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "desc",
+                        "name": "desc",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/contact/joinGroup": {
+            "post": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "加入群聊",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "userId",
+                        "name": "userId",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "comId",
+                        "name": "comId",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
+        "/contact/loadcommunity": {
+            "post": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "加载好友列表",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "ownerId",
+                        "name": "ownerId",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/index": {
             "get": {
                 "tags": [

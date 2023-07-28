@@ -26,6 +26,7 @@ func Resp(w http.ResponseWriter, code int, data interface{}, msg string) {
 	if err != nil {
 		fmt.Println(err)
 	}
+	// 发给客户端
 	w.Write(ret)
 }
 
@@ -41,6 +42,7 @@ func RespList(w http.ResponseWriter, code int, data interface{}, total interface
 	if err != nil {
 		fmt.Println(err)
 	}
+	// 发送给客户端
 	w.Write(ret)
 }
 
