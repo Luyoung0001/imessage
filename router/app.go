@@ -37,11 +37,13 @@ func Router() *gin.Engine {
 	r.POST("/user/updateUser", service.UpdateUser)
 	r.POST("/user/findUserByNameAndPwd", service.FindUserByNameAndPwd)
 	r.POST("/user/login", service.FindUserByNameAndPwd)
+	r.POST("/user/find", service.FindByID)
 
 	// 发送消息
-	r.GET("/user/sendMsg", service.SendMsg)
+	r.GET("/user/sendMsg", service.SendMsg) // websocket 测试
 	r.GET("/user/sendUserMsg", service.SendUserMsg)
 	r.GET("/chat", service.Chat)
+	r.POST("/user/redisMsg", service.RedisMsg)
 
 	return r
 }

@@ -187,6 +187,37 @@ paths:
       summary: 删除用户
       tags:
       - 用户模块
+  /user/find:
+    post:
+      parameters:
+      - description: userIdA
+        in: formData
+        name: userIdA
+        type: string
+      - description: userIdB
+        in: formData
+        name: userIdB
+        type: string
+      - description: start
+        in: formData
+        name: start
+        type: string
+      - description: end
+        in: formData
+        name: end
+        type: string
+      - description: isRev
+        in: formData
+        name: isRev
+        type: string
+      responses:
+        "200":
+          description: code","message"}
+          schema:
+            type: string
+      summary: redis收发消息
+      tags:
+      - 用户模块
   /user/findUserByNameAndPwd:
     post:
       parameters:

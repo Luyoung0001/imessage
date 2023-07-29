@@ -360,10 +360,34 @@ func JoinGroups(c *gin.Context) {
 	}
 }
 
-//func FindByID(c *gin.Context) {
-//	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
-//
-//	//	name := c.Request.FormValue("name")
-//	data := models.FindByID(uint(userId))
-//	utils.RespOK(c.Writer, data, "ok")
-//}
+// FindByID
+// @Summary 查看用户信息
+// @Tags 用户模块
+// @param userId formData string false "userId"
+// @Success 200 {string} json{"code","message"}
+// @Router /user/find [post]
+func FindByID(c *gin.Context) {
+	userId, _ := strconv.Atoi(c.Request.FormValue("userId"))
+	data := models.FindByID(uint(userId))
+	utils.RespOK(c.Writer, data, "ok")
+}
+
+// RedisMsg
+// @Summary redis收发消息
+// @Tags 用户模块
+// @param userIdA formData string false "userIdA"
+// @param userIdB formData string false "userIdB"
+// @param start formData string false "start"
+// @param end formData string false "end"
+// @param isRev formData string false "isRev"
+// @Success 200 {string} json{"code","message"}
+// @Router /user/find [post]
+func RedisMsg(c *gin.Context) {
+	userIdA, _ := strconv.Atoi(c.PostForm("userIdA"))
+	userIdB, _ := strconv.Atoi(c.PostForm("userIdB"))
+	start, _ := strconv.Atoi(c.PostForm("start"))
+	end, _ := strconv.Atoi(c.PostForm("end"))
+	isRev, _ := strconv.ParseBool(c.PostForm("isRev"))
+	res := models.RedisMsg(int64(userIdA), int64(userIdB), int64(start), int64(end), isRev)
+	utils.RespOKList(c.Writer, "ok", res)
+}

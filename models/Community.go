@@ -14,14 +14,19 @@ type Community struct {
 	Desc    string
 }
 
+// [禁止] 使用 panic 用于正常的错误处理。
+// 应该使用 error 和多个返回值。
+// panic 只适合用于那些严重影响程序运行的错误
+
 func CreateCommunity(community Community) (int, string) {
 	tx := utils.DB.Begin()
-	//事务一旦开始，不论什么异常最终都会 Rollback
-	defer func() {
-		if r := recover(); r != nil {
-			tx.Rollback()
-		}
-	}()
+	//defer func() {
+	//	// recover():内建函数;函数用于从发生的恐慌（panic）中恢复
+	//	if r := recover(); r != nil {
+	//		// 事物回滚
+	//		tx.Rollback()
+	//	}
+	//}()
 
 	if len(community.Name) == 0 {
 		return -1, "群名称不能为空"
@@ -42,7 +47,7 @@ func CreateCommunity(community Community) (int, string) {
 		tx.Rollback()
 		return -1, "添加群关系失败"
 	}
-
+	// 提交事务
 	tx.Commit()
 	return 0, "建群成功"
 

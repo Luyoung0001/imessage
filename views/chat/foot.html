@@ -262,9 +262,7 @@
                         })
                     }
                 },
-                showweixin: function () {
-                    mui.alert("请加微信号msb-shenzhuan索取")
-                },
+
                 showmsg: function (user, msg, isReverse, isFirst) {
                     //console.log(">>>>>>>>>>>", user)
                     // console.log(">>>>>>>>>>>", msg)
@@ -598,7 +596,7 @@
                         this.setTimeFlag();
                         var that = this;
                         console.log(that);
-                        post("contact/joinGroup", { comId: dstobj, "userId": userId() }, function (res) {
+                        post("/contact/joinGroup", { comId: dstobj, "userId": userId() }, function (res) {
                             if (res.Code == 0) {
                                 mui.toast("添加成功");
 

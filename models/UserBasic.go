@@ -108,3 +108,9 @@ func IsUniqueCreateUser(user UserBasic) bool {
 	}
 	return true
 }
+
+func FindByID(id uint) UserBasic {
+	user := UserBasic{}
+	utils.DB.Where("id = ?", id).First(&user)
+	return user
+}

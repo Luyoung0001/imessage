@@ -312,6 +312,54 @@ const docTemplate = `{
                 }
             }
         },
+        "/user/find": {
+            "post": {
+                "tags": [
+                    "用户模块"
+                ],
+                "summary": "redis收发消息",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "userIdA",
+                        "name": "userIdA",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "userIdB",
+                        "name": "userIdB",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "start",
+                        "name": "start",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "end",
+                        "name": "end",
+                        "in": "formData"
+                    },
+                    {
+                        "type": "string",
+                        "description": "isRev",
+                        "name": "isRev",
+                        "in": "formData"
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "code\",\"message\"}",
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                }
+            }
+        },
         "/user/findUserByNameAndPwd": {
             "post": {
                 "tags": [
