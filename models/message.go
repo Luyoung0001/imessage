@@ -152,7 +152,9 @@ func recvProc(node *Node) {
 			currentTime := uint64(time.Now().Unix())
 			node.Heartbeat(currentTime)
 		} else {
+			disPatch(data) // 消息分发
 			broadMsg(data) // 将消息广播
+
 			// fmt.Println("[ws] recvProc <<<<< ", string(data))
 		}
 	}
@@ -279,8 +281,9 @@ func sendMsg(targetId int64, data []byte) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	// 如果获取到了,说明用户在线
+
 	if r != "" {
+		// 如果获取到了,说明用户在线
 		if ok {
 			fmt.Println("sendMsg >>> userID: ", targetId, "  msg:", string(data))
 			node.DataQueue <- data
@@ -309,7 +312,7 @@ func sendMsg(targetId int64, data []byte) {
 
 // 需要重写此方法才能完整的msg转byte[]
 
-func (msg Message) MarshallBinary() ([]byte, error) {
+func (msg Message) MarshalBinary() ([]byte, error) {
 	return json.Marshal(msg)
 }
 
