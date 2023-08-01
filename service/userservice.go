@@ -391,3 +391,34 @@ func RedisMsg(c *gin.Context) {
 	res := models.RedisMsg(int64(userIdA), int64(userIdB), int64(start), int64(end), isRev)
 	utils.RespOKList(c.Writer, "ok", res)
 }
+
+func UnRegister(c *gin.Context) {
+
+}
+func FindPassword(c *gin.Context) {
+
+}
+func DeleteFriend(c *gin.Context) {
+
+}
+func FriendsStatus(c *gin.Context) {
+
+}
+func BlockFriend(c *gin.Context) {
+
+}
+func DeleteCommunity(c *gin.Context) {
+
+}
+func OutCommunity(c *gin.Context) {
+
+}
+func OwnerManCommunity(c *gin.Context) {
+
+}
+func ManManCommunity(c *gin.Context) {
+
+}
+func AllowCommunity(c *gin.Context) {
+
+}
