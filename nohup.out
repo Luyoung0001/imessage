@@ -3601,3 +3601,139 @@ redis: nil
 disPatch ends...
 websocket: close 1001 (going away)
 [GIN] 2023/08/08 - 15:00:58 | 200 |     396.396µs |  198.235.24.142 | GET      "/"
+init...
+udpRecvProc...
+udpSendProc...
+Config File "app" Not Found in "[/root/imessage/config]"
+config app: <nil>
+
+2023/08/08 18:03:08 [35m/root/server_imessage/utils/system_init.go:44
+[0m[31m[error] [0mfailed to initialize database, got error dial tcp 127.0.0.1:3306: connect: connection refused
+config mysql: <nil>
+config Redis: <nil>
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /swagger/*any             --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /asset/*filepath          --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] HEAD   /asset/*filepath          --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+panic: html/template: pattern matches no files: `/root/imessage/views/**/*`
+
+goroutine 1 [running]:
+html/template.Must(...)
+	/usr/local/go/src/html/template/template.go:368
+github.com/gin-gonic/gin.(*Engine).LoadHTMLGlob(0xc0001036c0, {0xd316a4, 0x19})
+	/root/gowork/pkg/mod/github.com/gin-gonic/gin@v1.9.1/gin.go:255 +0x306
+imessage/router.Router()
+	/root/server_imessage/router/app.go:20 +0x105
+main.main()
+	/root/server_imessage/main.go:18 +0x34
+init...
+udpSendProc...
+udpRecvProc...
+listen udp 0.0.0.0:3000: bind: address already in use
+panic: runtime error: invalid memory address or nil pointer dereference
+	panic: runtime error: invalid memory address or nil pointer dereference
+[signal SIGSEGV: segmentation violation code=0x1 addr=0x0 pc=0x9afe34]
+
+goroutine 20 [running]:
+server_imessage/models.udpRecvProc.func1(0x200?)
+	/root/server_imessage/models/message.go:210 +0x14
+panic({0xc49f20, 0x1b543d0})
+	/usr/local/go/src/runtime/panic.go:884 +0x213
+server_imessage/models.udpRecvProc()
+	/root/server_imessage/models/message.go:221 +0x18f
+created by server_imessage/models.init.0
+	/root/server_imessage/models/message.go:24 +0x6a
+init...
+udpRecvProc...
+udpSendProc...
+config app: <nil>
+config mysql: map[dns:root:791975457@qqCom@tcp(rm-cn-pe33bz99b000emxo.rwlb.rds.aliyuncs.com:3306)/ginchat?charset=utf8mb4&parseTime=True&loc=Local]
+config Redis: map[addr:r-bp13spatn5nmym8xqnpd.redis.rds.aliyuncs.com:6379 db:0 minidleconn:30 password:r-bp13spatn5nmym8xqn:791975457@qqcom poolsize:30]
+[GIN-debug] [WARNING] Creating an Engine instance with the Logger and Recovery middleware already attached.
+
+[GIN-debug] [WARNING] Running in "debug" mode. Switch to "release" mode in production.
+ - using env:	export GIN_MODE=release
+ - using code:	gin.SetMode(gin.ReleaseMode)
+
+[GIN-debug] GET    /swagger/*any             --> github.com/swaggo/gin-swagger.CustomWrapHandler.func1 (3 handlers)
+[GIN-debug] GET    /asset/*filepath          --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] HEAD   /asset/*filepath          --> github.com/gin-gonic/gin.(*RouterGroup).createStaticHandler.func1 (3 handlers)
+[GIN-debug] Loaded HTML Templates (25): 
+	- /chat/tabmenu.shtml
+	- login.html
+	- test.html
+	- /chat/main.shtml
+	- /chat/profile.shtml
+	- userinfo.html
+	- register.html
+	- /chat/concat.shtml
+	- profile.html
+	- createcom.html
+	- /chat/createcom.shtml
+	- group.html
+	- head.html
+	- /chat/head.shtml
+	- tabmenu.html
+	- 
+	- concat.html
+	- /chat/userinfo.shtml
+	- /chat/group.shtml
+	- index.html
+	- main.html
+	- /user/login.shtml
+	- /user/test.shtml
+	- foot.html
+	- /chat/foot.shtml
+
+[GIN-debug] GET    /                         --> server_imessage/service.GetIndex (3 handlers)
+[GIN-debug] GET    /index                    --> server_imessage/service.GetIndex (3 handlers)
+[GIN-debug] GET    /toRegister               --> server_imessage/service.ToRegister (3 handlers)
+[GIN-debug] GET    /toChat                   --> server_imessage/service.ToChat (3 handlers)
+[GIN-debug] POST   /contact/addFriend        --> server_imessage/service.AddFriend (3 handlers)
+[GIN-debug] POST   /searchFriends            --> server_imessage/service.SearchFriends (3 handlers)
+[GIN-debug] POST   /findPassword             --> server_imessage/service.FindPassword (3 handlers)
+[GIN-debug] POST   /unRegister               --> server_imessage/service.UnRegister (3 handlers)
+[GIN-debug] POST   /contact/deFriend         --> server_imessage/service.DeleteFriend (3 handlers)
+[GIN-debug] POST   /contact/friendsStatus    --> server_imessage/service.FriendsStatus (3 handlers)
+[GIN-debug] POST   /contact/blockFriend      --> server_imessage/service.BlockFriend (3 handlers)
+[GIN-debug] POST   /contact/createCommunity  --> server_imessage/service.CreateCommunity (3 handlers)
+[GIN-debug] POST   /contact/deCommunity      --> server_imessage/service.DeleteCommunity (3 handlers)
+[GIN-debug] POST   /contact/outCommunity     --> server_imessage/service.OutCommunity (3 handlers)
+[GIN-debug] POST   /contact/ownerManCommunity --> server_imessage/service.OwnerManCommunity (3 handlers)
+[GIN-debug] POST   /contact/manManCommunity  --> server_imessage/service.ManManCommunity (3 handlers)
+[GIN-debug] POST   /contact/allowCommunity   --> server_imessage/service.AllowCommunity (3 handlers)
+[GIN-debug] POST   /contact/loadcommunity    --> server_imessage/service.LoadCommunity (3 handlers)
+[GIN-debug] POST   /contact/joinGroup        --> server_imessage/service.JoinGroups (3 handlers)
+[GIN-debug] POST   /user/createUser          --> server_imessage/service.CreateUser (3 handlers)
+[GIN-debug] POST   /user/getUserList         --> server_imessage/service.GetUserList (3 handlers)
+[GIN-debug] POST   /user/deleteUser          --> server_imessage/service.DeleteUser (3 handlers)
+[GIN-debug] POST   /user/updateUser          --> server_imessage/service.UpdateUser (3 handlers)
+[GIN-debug] POST   /user/findUserByNameAndPwd --> server_imessage/service.FindUserByNameAndPwd (3 handlers)
+[GIN-debug] POST   /user/login               --> server_imessage/service.FindUserByNameAndPwd (3 handlers)
+[GIN-debug] POST   /user/find                --> server_imessage/service.FindByID (3 handlers)
+[GIN-debug] GET    /user/sendMsg             --> server_imessage/service.SendMsg (3 handlers)
+[GIN-debug] GET    /user/sendUserMsg         --> server_imessage/service.SendUserMsg (3 handlers)
+[GIN-debug] GET    /chat                     --> server_imessage/service.Chat (3 handlers)
+[GIN-debug] POST   /user/redisMsg            --> server_imessage/service.RedisMsg (3 handlers)
+[GIN-debug] [WARNING] You trusted all proxies, this is NOT safe. We recommend you to set a value.
+Please check https://pkg.go.dev/github.com/gin-gonic/gin#readme-don-t-trust-all-proxies for details.
+[GIN-debug] Listening and serving HTTP on :9000
+[GIN] 2023/08/08 - 18:21:43 | 200 |     467.996µs |     124.89.2.81 | GET      "/"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      68.596µs |     124.89.2.81 | GET      "/asset/plugins/mui/css/mui.css"
+[GIN] 2023/08/08 - 18:21:43 | 304 |     104.915µs |     124.89.2.81 | GET      "/asset/css/audio.css"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      48.106µs |     124.89.2.81 | GET      "/asset/js/vue.min.js"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      60.725µs |     124.89.2.81 | GET      "/asset/css/chat.css"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      59.963µs |     124.89.2.81 | GET      "/asset/css/login.css"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      89.561µs |     124.89.2.81 | GET      "/asset/iconfont/iconfont.css"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      69.904µs |     124.89.2.81 | GET      "/asset/plugins/mui/js/mui.js"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      43.684µs |     124.89.2.81 | GET      "/asset/js/vue-resource.min.js"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      54.413µs |     124.89.2.81 | GET      "/asset/js/util.js"
+[GIN] 2023/08/08 - 18:21:43 | 304 |      91.154µs |     124.89.2.81 | GET      "/asset/images/favicon.ico"
+[GIN] 2023/08/08 - 18:21:50 | 200 |     540.407µs |     124.89.2.81 | GET      "/"
+[GIN] 2023/08/08 - 18:21:56 | 200 |      430.95µs |     124.89.2.81 | GET      "/"
+[GIN] 2023/08/08 - 18:22:25 | 200 |     411.804µs |     124.89.2.81 | GET      "/"

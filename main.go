@@ -2,9 +2,9 @@ package main
 
 import (
 	"github.com/spf13/viper"
-	"imessage/models"
-	"imessage/router"
-	"imessage/utils"
+	"server_imessage/models"
+	"server_imessage/router"
+	"server_imessage/utils"
 	"time"
 )
 

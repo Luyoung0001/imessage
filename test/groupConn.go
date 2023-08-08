@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	"imessage/models"
+	"server_imessage/models"
 )
 
 // 这里就是将模板导入数据库的一个简单案例

@@ -1,4 +1,4 @@
-module imessage
+module server_imessage
 
 go 1.20
 

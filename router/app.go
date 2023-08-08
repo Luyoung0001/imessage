@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	swaggerfiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
-	"imessage/docs"
-	"imessage/service"
+	"server_imessage/docs"
+	"server_imessage/service"
 )
 
 func Router() *gin.Engine {
@@ -16,8 +16,8 @@ func Router() *gin.Engine {
 	// swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// 静态资源
-	r.Static("/asset", "/root/imessage/asset/")
-	r.LoadHTMLGlob("/root/imessage/views/**/*")
+	r.Static("/asset", "/root/server_imessage/asset/")
+	r.LoadHTMLGlob("/root/server_imessage/views/**/*")
 
 	// 首页
 	r.GET("/", service.GetIndex)
