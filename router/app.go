@@ -16,8 +16,8 @@ func Router() *gin.Engine {
 	// swagger
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerfiles.Handler))
 	// 静态资源
-	r.Static("/asset", "/Users/luliang/GoLand/imessage/asset/")
-	r.LoadHTMLGlob("/Users/luliang/GoLand/imessage/views/**/*")
+	r.Static("/asset", "/root/imessage/asset/")
+	r.LoadHTMLGlob("/root/imessage/views/**/*")
 
 	// 首页
 	r.GET("/", service.GetIndex)

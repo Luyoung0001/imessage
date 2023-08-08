@@ -20,7 +20,7 @@ var (
 
 func InitConfig() {
 	viper.SetConfigName("app")
-	viper.AddConfigPath("/Users/luliang/GoLand/imessage/config") //带绝对路径
+	viper.AddConfigPath("/root/imessage/config") //带绝对路径
 	err := viper.ReadInConfig()
 	if err != nil {
 		fmt.Println(err)

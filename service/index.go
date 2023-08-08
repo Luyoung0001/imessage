@@ -12,7 +12,7 @@ import (
 // @Success 200 {string} welcome
 // @Router /index [get]
 func GetIndex(c *gin.Context) {
-	ind, err := template.ParseFiles("/Users/luliang/GoLand/imessage/index.html", "views/chat/head.html")
+	ind, err := template.ParseFiles("/root/imessage/index.html", "views/chat/head.html")
 	if err != nil {
 		panic(err)
 	}
@@ -27,7 +27,7 @@ func GetIndex(c *gin.Context) {
 // @Success 200 {string} welcome
 // @Router /toRegister [get]
 func ToRegister(c *gin.Context) {
-	ind, err := template.ParseFiles("/Users/luliang/GoLand/imessage/views/user/register.html")
+	ind, err := template.ParseFiles("/root/imessage/views/user/register.html")
 	if err != nil {
 		panic(err)
 	}
@@ -45,16 +45,16 @@ func ToRegister(c *gin.Context) {
 // @Success 200 {string} welcome
 // @Router /toChat [get]
 func ToChat(c *gin.Context) {
-	ind, err := template.ParseFiles("/Users/luliang/GoLand/imessage/views/chat/index.html",
-		"/Users/luliang/GoLand/imessage/views/chat/head.html",
-		"/Users/luliang/GoLand/imessage/views/chat/foot.html",
-		"/Users/luliang/GoLand/imessage/views/chat/tabmenu.html",
-		"/Users/luliang/GoLand/imessage/views/chat/concat.html",
-		"/Users/luliang/GoLand/imessage/views/chat/group.html",
-		"/Users/luliang/GoLand/imessage/views/chat/profile.html",
-		"/Users/luliang/GoLand/imessage/views/chat/createcom.html",
-		"/Users/luliang/GoLand/imessage/views/chat/userinfo.html",
-		"/Users/luliang/GoLand/imessage/views/chat/main.html")
+	ind, err := template.ParseFiles("/root/imessage/views/chat/index.html",
+		"/root/imessage/views/chat/head.html",
+		"/root/imessage/views/chat/foot.html",
+		"/root/imessage/views/chat/tabmenu.html",
+		"/root/imessage/views/chat/concat.html",
+		"/root/imessage/views/chat/group.html",
+		"/root/imessage/views/chat/profile.html",
+		"/root/imessage/views/chat/createcom.html",
+		"/root/imessage/views/chat/userinfo.html",
+		"/root/imessage/views/chat/main.html")
 	if err != nil {
 		panic(err)
 	}
